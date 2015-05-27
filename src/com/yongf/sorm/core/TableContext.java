@@ -21,6 +21,7 @@ import java.util.Map;
 import com.yongf.sorm.bean.ColumnInfo;
 import com.yongf.sorm.bean.TableInfo;
 import com.yongf.sorm.utils.JavaFileUtils;
+import com.yongf.sorm.utils.StringUtils;
 
 
 /**
@@ -95,6 +96,8 @@ public class TableContext
 		//更新类结构
 		updateJavaPOFile();
 		
+		//加载po包下面所有的类,便于重用,提高效率!!!
+		loadPOTables();
 	}
 
 	/**
@@ -110,6 +113,27 @@ public class TableContext
 		{
 			JavaFileUtils.createJavaPOFile(t, new MySqlTypeConvertor());
 		}
+	}
+	
+	/**
+	 * 加载po包下面的类
+	 *  
+	 * @author Scott Wang
+	 */
+	public static void loadPOTables()
+	{
+		for(TableInfo tableInfo:tables.values())
+		{
+			try
+			{
+				Class c=Class.forName(DBManager.getConf().getPoPackage()+"."+StringUtils.firstChar2UpperCase(tableInfo.getTname()));
+				poClassTableMap.put(c, tableInfo);
+			} catch (ClassNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	public static void main(String[] args)
