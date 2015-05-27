@@ -10,9 +10,13 @@
  */ 
 package com.yongf.sorm.core; 
 
+import java.lang.reflect.Method;
 import java.util.List;
 
+import com.yongf.sorm.bean.ColumnInfo;
 import com.yongf.sorm.bean.TableInfo;
+import com.yongf.sorm.utils.ReflectUtils;
+import com.yongf.sorm.utils.StringUtils;
 
 
 /**
@@ -39,19 +43,32 @@ public class MysqlQuery implements Query
 	}
 
 	@Override
-	public void delete(Class clazz, int id)
+	public void delete(Class clazz, Object id)
 	{
 		//Emp.class,2-->delete from emp where id=2;
-		
 		//通过Class对象找TableInfo   
 		TableInfo tableInfo=TableContext.poClassTableMap.get(clazz);
+		//获得主键
+		ColumnInfo onlyPriKey=tableInfo.getOnlyPriKey();
+		
+		String sql="delete from"+tableInfo.getTname()+" where"+onlyPriKey.getName()+"=? ";
+		
+		executeDML(sql, new Object[]{id});
 		
 	}
 
 	@Override
 	public void delete(Object obj)
 	{
+		Class c=obj.getClass();
+		TableInfo tableInfo=TableContext.poClassTableMap.get(c);
+		//获得主键
+		ColumnInfo onlyPriKey=tableInfo.getOnlyPriKey();
 		
+		//通过反射机制,调用属性对应的get/set方法
+		Object priKeyValue=ReflectUtils.invokeGet(onlyPriKey.getName(), obj);
+		
+		delete(c, priKeyValue);
 	}
 
 	@Override

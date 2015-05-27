@@ -46,7 +46,7 @@ public interface Query
 	 * @return 
 	 * @author Scott Wang
 	 */
-	public void delete(Class clazz,int id);		//delete from User where id=2;
+	public void delete(Class clazz,Object id);		//delete from User where id=2;
 	
 	/**
 	 * 删除对象在数据库中对应的记录(对象所在的类对应到表,对象主键的值对应到记录)
