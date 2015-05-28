@@ -10,13 +10,16 @@
  */ 
 package com.yongf.sorm.core; 
 
-import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
+import com.yongf.po.Emp;
 import com.yongf.sorm.bean.ColumnInfo;
 import com.yongf.sorm.bean.TableInfo;
+import com.yongf.sorm.utils.JDBCUtils;
 import com.yongf.sorm.utils.ReflectUtils;
-import com.yongf.sorm.utils.StringUtils;
 
 
 /**
@@ -28,11 +31,39 @@ import com.yongf.sorm.utils.StringUtils;
  */
 public class MysqlQuery implements Query
 {
+	public static void main(String[] args)
+	{
+		Emp e=new Emp();
+		e.setId(2);
+		
+		new MysqlQuery().delete(e);
+	}
 
 	@Override
 	public int executeDML(String sql, Object[] params)
 	{
-		return 0;
+		Connection conn=DBManager.getConn();
+		int count=0;
+		
+		PreparedStatement ps=null;
+		
+		try
+		{
+			ps=conn.prepareStatement(sql);
+			
+			//给sql设参
+			JDBCUtils.handleParams(ps, params);
+			
+			count=ps.executeUpdate();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}finally
+		{
+			DBManager.close(ps,conn);
+		}
+		
+		return count;
 	}
 
 	@Override
