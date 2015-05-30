@@ -243,22 +243,45 @@ public class MysqlQuery implements Query
 	@Override
 	public Object queryUniqueRow(String sql, Class clazz, Object[] params)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		List list=queryRows(sql,clazz,params);
+		return (list==null&&list.size()>0)?null:list.get(0);
 	}
 
 	@Override
 	public Object queryValue(String sql, Object[] params)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn=DBManager.getConn();
+		Object value=null;	//存储查询结果的对象
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		try
+		{
+			ps=conn.prepareStatement(sql);
+			//给sql设参
+			JDBCUtils.handleParams(ps, params);
+			System.out.println(ps);
+			rs=ps.executeQuery();
+			//多行
+			while(rs.next())
+			{
+				//select count(*) from user
+				value=rs.getObject(1);
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}finally
+		{
+			DBManager.close(ps,conn);
+		}
+		
+		return value;
 	}
 
 	@Override
 	public Number queryNumber(String sql, Object[] params)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return (Number)queryValue(sql,params);
 	}
 
 }
