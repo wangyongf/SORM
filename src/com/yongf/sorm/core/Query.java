@@ -34,6 +34,7 @@ public interface Query
 
 	/**
 	 * 将一个对象存储到数据库中
+	 * 把对象中不为null的属性往数据库中存储!如果数字为null则存0
 	 * @param obj 要存储的对象
 	 * @author Scott Wang
 	 */

@@ -10,6 +10,7 @@
  */ 
 package com.yongf.sorm.utils; 
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
@@ -34,7 +35,7 @@ public class ReflectUtils
 		try
 		{
 			Class c=obj.getClass();
-			Method m=c.getMethod("get"+StringUtils.firstChar2UpperCase(fieldName), null);
+			Method m=c.getDeclaredMethod("get"+StringUtils.firstChar2UpperCase(fieldName), null);
 			return m.invoke(obj, null);
 		} catch (Exception e)
 		{
@@ -42,6 +43,19 @@ public class ReflectUtils
 			return null;
 		}
 	}
+	
+	public static void invokeSet(Object obj,String columnName,Object columnValue)
+	{
+		try
+		{
+			Method m=obj.getClass().getDeclaredMethod("set"+StringUtils.firstChar2UpperCase(columnName), columnValue.getClass());
+			m.invoke(obj, columnValue);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 
 }
  
