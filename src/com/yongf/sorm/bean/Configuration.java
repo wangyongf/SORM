@@ -55,6 +55,11 @@ public class Configuration
 	 */
 	private String poPackage;
 	
+	/**
+	 * 项目使用的查询类是哪一个类
+	 */
+	private String queryClass;
+	
 	public String getDriver()
 	{
 		return driver;
@@ -123,7 +128,29 @@ public class Configuration
 		this.srcPath = srcPath;
 		this.poPackage = poPackage;
 	}
-
+	
+	public Configuration(String driver, String url, String user, String pwd,
+			String usingDB, String srcPath, String poPackage, String queryClass)
+	{
+		super();
+		this.driver = driver;
+		this.url = url;
+		this.user = user;
+		this.pwd = pwd;
+		this.usingDB = usingDB;
+		this.srcPath = srcPath;
+		this.poPackage = poPackage;
+		this.queryClass = queryClass;
+	}
+	
+	public String getQueryClass()
+	{
+		return queryClass;
+	}
+	public void setQueryClass(String queryClass)
+	{
+		this.queryClass = queryClass;
+	}
 	public Configuration()
 	{
 		super();

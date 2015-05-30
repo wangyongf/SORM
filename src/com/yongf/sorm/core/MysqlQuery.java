@@ -10,19 +10,9 @@
  */ 
 package com.yongf.sorm.core; 
 
-import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.yongf.po.Emp;
-import com.yongf.sorm.bean.ColumnInfo;
-import com.yongf.sorm.bean.TableInfo;
-import com.yongf.sorm.utils.JDBCUtils;
-import com.yongf.sorm.utils.ReflectUtils;
 import com.yongf.vo.EmpVO;
 
 
@@ -74,7 +64,23 @@ public class MysqlQuery extends Query
 	
 	public static void main(String[] args)
 	{
-				
+		List<Emp> list=new MysqlQuery().queryRows("select id, empname,age from emp where age>? and salary<?",Emp.class
+				,new Object[]{10,5000});
+		System.out.println(list);
+		for(Emp e:list)
+		{
+			System.out.println(e.getEmpname());
+		}
+		
+		String sql2="select e.id,e.empname,salary+bonus 'wage',age, d.dname 'deptName',d.address 'deptAddr' from emp e "+
+"join dept d on e.deptId=d.id ";
+		List<EmpVO> list2=new MysqlQuery().queryRows(sql2,EmpVO.class
+				,null);
+		System.out.println(list2);
+		for(EmpVO e:list2)
+		{
+			System.out.println(e.getEmpname()+"-"+e.getDeptAddr()+"-"+e.getWage());
+		}
 	}
 	
 	@Override

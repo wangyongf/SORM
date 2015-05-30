@@ -10,9 +10,50 @@
  */ 
 package com.yongf.sorm.core; 
 
+
+/**
+ * 创建Query对象的工厂类
+ *  
+ * @version 1.0 
+ * 2015年5月30日 下午11:32:53       
+ * @author ScottWang www.i466.cn
+ */
 public class QueryFactory
 {
-//	public Query createQuery();
+	private static Query prototypeObj;	//原型对象
+	static
+	{
+		try
+		{
+			Class c=Class.forName(DBManager.getConf().getQueryClass());	//加载指定的query类
+			prototypeObj=(Query)c.newInstance();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 私有构造器
+	 */
+	private QueryFactory()
+	{
+		
+	}
+	
+	
+	
+	public static Query createQuery()
+	{
+		try
+		{
+			return (Query)prototypeObj.clone();
+		} catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+			return null;
+		} 
+	}
 
 }
  

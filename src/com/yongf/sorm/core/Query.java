@@ -33,7 +33,7 @@ import com.yongf.sorm.utils.ReflectUtils;
  * @author ScottWang www.i466.cn
  */
 @SuppressWarnings("all")
-public abstract class Query
+public abstract class Query implements Cloneable
 {
 	/**
 	 * 采用模板方法模式将JDBC操作封装成模板,便于重用
@@ -326,6 +326,11 @@ public abstract class Query
 	 * @author Scott Wang
 	 */
 	public abstract Object queryPagenate(int pageNum,int size);
-	
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException
+	{
+		return super.clone();
+	}
 }
  
