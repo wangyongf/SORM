@@ -60,6 +60,32 @@ public class Configuration
 	 */
 	private String queryClass;
 	
+	/**
+	 * 连接池中最小的连接数
+	 */
+	private int poolMinSize;
+	
+	/**
+	 * 连接池中最大的连接数
+	 */
+	private int poolMaxSize;
+	
+	public int getPoolMinSize()
+	{
+		return poolMinSize;
+	}
+	public void setPoolMinSize(int poolMinSize)
+	{
+		this.poolMinSize = poolMinSize;
+	}
+	public int getPoolMaxSize()
+	{
+		return poolMaxSize;
+	}
+	public void setPoolMaxSize(int poolMaxSize)
+	{
+		this.poolMaxSize = poolMaxSize;
+	}
 	public String getDriver()
 	{
 		return driver;

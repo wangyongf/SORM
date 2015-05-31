@@ -23,6 +23,8 @@ public class QueryFactory
 	private static Query prototypeObj;	//原型对象
 	static
 	{
+		
+		
 		try
 		{
 			Class c=Class.forName(DBManager.getConf().getQueryClass());	//加载指定的query类
@@ -31,6 +33,8 @@ public class QueryFactory
 		{
 			e.printStackTrace();
 		}
+		
+		
 	}
 	
 	/**

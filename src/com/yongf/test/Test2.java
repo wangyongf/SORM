@@ -20,15 +20,15 @@ import com.yongf.vo.EmpVO;
 
 
 /**
- * 客户端调用的测试类
+ * 测试连接池的效率
  *  
  * @version 1.0 
- * 2015年5月31日 下午4:21:52       
+ * 2015年5月31日 下午4:22:10       
  * @author ScottWang www.i466.cn
  */
-public class Test
+public class Test2
 {
-	public static void main(String[] args)
+	public static void test01()
 	{
 		Query q=QueryFactory.createQuery();
 		
@@ -39,6 +39,11 @@ public class Test
 		{
 			System.out.println(e.getEmpname());
 		}
+	}
+	
+	public static void test02()
+	{
+		Query q=QueryFactory.createQuery();
 		
 		String sql2="select e.id,e.empname,salary+bonus 'wage',age, d.dname 'deptName',d.address 'deptAddr' from emp e "+
 "join dept d on e.deptId=d.id ";
@@ -52,26 +57,16 @@ public class Test
 
 	}
 	
-//	public static void main(String[] args)
-//	{
-//		List<Emp> list=new MysqlQuery().queryRows("select id, empname,age from emp where age>? and salary<?",Emp.class
-//				,new Object[]{10,5000});
-//		System.out.println(list);
-//		for(Emp e:list)
-//		{
-//			System.out.println(e.getEmpname());
-//		}
-//		
-//		String sql2="select e.id,e.empname,salary+bonus 'wage',age, d.dname 'deptName',d.address 'deptAddr' from emp e "+
-//"join dept d on e.deptId=d.id ";
-//		List<EmpVO> list2=new MysqlQuery().queryRows(sql2,EmpVO.class
-//				,null);
-//		System.out.println(list2);
-//		for(EmpVO e:list2)
-//		{
-//			System.out.println(e.getEmpname()+"-"+e.getDeptAddr()+"-"+e.getWage());
-//		}
-//	}
-
+	public static void main(String[] args)
+	{
+		long a=System.currentTimeMillis();
+		for(int i=0;i<3000;i++)
+		{
+			test01();
+		}
+		long b=System.currentTimeMillis();
+		System.out.println((b-a));	//不加连接池的耗时:25146ms	增加连接池之后,耗时为:4223	效率增加很多!!!
+	}
+	
 }
  

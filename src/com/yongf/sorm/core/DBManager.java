@@ -19,6 +19,7 @@ import java.sql.Statement;
 import java.util.Properties;
 
 import com.yongf.sorm.bean.Configuration;
+import com.yongf.sorm.pool.DBConnPool;
 
 
 /**
@@ -30,8 +31,15 @@ import com.yongf.sorm.bean.Configuration;
  */
 public class DBManager
 {
+	/**
+	 * 配置信息
+	 */
 	private static Configuration conf;
 	
+	/**
+	 * 连接池对象
+	 */
+	private static DBConnPool pool;
 	static	//静态代码块==>只在加载类的时候执行一次!!!
 	{
 		Properties pros=new Properties();
@@ -52,9 +60,43 @@ public class DBManager
 		conf.setUser(pros.getProperty("user"));
 		conf.setUsingDB(pros.getProperty("usingDB"));
 		conf.setQueryClass(pros.getProperty("queryClass"));
+		conf.setPoolMaxSize(Integer.parseInt(pros.getProperty("poolMaxSize")));
+		conf.setPoolMinSize(Integer.parseInt(pros.getProperty("poolMinSize")));
+		
+		
 	}
 
+	/**
+	 * 获得Connection对象
+	 * @return 
+	 * @author Scott Wang
+	 */
 	public static Connection getConn()
+	{
+//		try
+//		{
+//			Class.forName(conf.getDriver());
+//			return DriverManager.getConnection(conf.getUrl(),conf.getUser(),conf.getPwd());	//目前直接建立连接,后期增加连接池处理,提高效率!!!
+//		}
+//		catch(Exception e)
+//		{
+//			e.printStackTrace();
+//			return null;
+//		}
+		if(pool==null)
+		{
+			pool=new DBConnPool();
+		}
+		return pool.getConneciton();
+		
+	}
+	
+	/**
+	 * 创建新的Connection对象
+	 * @return 
+	 * @author Scott Wang
+	 */
+	public static Connection createConn()
 	{
 		try
 		{
@@ -68,6 +110,13 @@ public class DBManager
 		}
 	}
 	
+	/**
+	 * 关闭传入的ResultSet,PreparedStatement,Connection对象
+	 * @param rs
+	 * @param ps
+	 * @param conn 
+	 * @author Scott Wang
+	 */
 	public static void close(ResultSet rs,Statement ps,Connection conn)
 	{
 		try
@@ -92,19 +141,27 @@ public class DBManager
 		{
 			e.printStackTrace();
 		}
-		try
-		{
-			if(conn!=null)
-			{
-				conn.close();
-			}
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
+//		try
+//		{
+//			if(conn!=null)
+//			{
+//				conn.close();
+//			}
+//			
+//		}
+//		catch(SQLException e)
+//		{
+//			e.printStackTrace();
+//		}
+		pool.close(conn);
 	}
 
+	/**
+	 * 关闭传入的PreparedStatement,Connection对象
+	 * @param ps
+	 * @param conn 
+	 * @author Scott Wang
+	 */
 	public static void close(Statement ps,Connection conn)
 	{
 		try
@@ -118,34 +175,39 @@ public class DBManager
 		{
 			e.printStackTrace();
 		}
-		try
-		{
-			if(conn!=null)
-			{
-				conn.close();
-			}
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		
+//		try
+//		{
+//			if(conn!=null)
+//			{
+//				conn.close();
+//			}
+//		}
+//		catch(SQLException e)
+//		{
+//			e.printStackTrace();
+//		}
+		pool.close(conn);
 	}
 	
+	/**
+	 * 关闭传入的Connection对象
+	 * @param conn 
+	 * @author Scott Wang
+	 */
 	public static void close(Connection conn)
 	{
-		try
-		{
-			if(conn!=null)
-			{
-				conn.close();
-			}
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		
+//		try
+//		{
+//			if(conn!=null)
+//			{
+//				conn.close();
+//			}
+//		}
+//		catch(SQLException e)
+//		{
+//			e.printStackTrace();
+//		}
+		pool.close(conn);
 	}
 	
 	/**
