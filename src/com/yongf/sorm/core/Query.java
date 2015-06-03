@@ -271,7 +271,26 @@ public abstract class Query implements Cloneable
 	public Object queryUniqueRow(String sql,Class clazz,Object[] params)
 	{
 		List list=queryRows(sql,clazz,params);
-		return (list==null&&list.size()>0)?null:list.get(0);
+		return (list!=null&&list.size()>0)?list.get(0):null;
+	}
+	
+	/**
+	 * 根据主键的值直接查找对应的对象
+	 * @param clazz
+	 * @param id
+	 * @return 
+	 * @author Scott Wang
+	 */
+	public Object queryById(Class clazz,Object id)
+	{
+		//select * from emp where id=?		//delete from emp where id=?
+		TableInfo tableInfo=TableContext.poClassTableMap.get(clazz);
+		//获得主键
+		ColumnInfo onlyPriKey=tableInfo.getOnlyPriKey();
+		
+		String sql="select * from"+tableInfo.getTname()+" where"+onlyPriKey.getName()+"=? ";
+		
+		return queryUniqueRow(sql, clazz, new Object[]{id});
 	}
 	
 	/**
